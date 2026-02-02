@@ -786,19 +786,41 @@
       // Giữ nguyên logic từ file cũ, chỉ cải thiện cách thức
       // =====================================================================
       
-      const ENCRYPTION_KEY = "fecredit-secret-key";
+      const ENCRYPTION_KEY = "shinhan-secret-key";
+      const MAX_LOAN_AMOUNT = 500000000; // 500 million VND safety bound
       
       // =====================================================================
       // UTILITY FUNCTIONS
       // =====================================================================
       
       /**
-       * Format currency
+       * Clean and parse numeric value from string
+       * Removes commas, spaces, currency symbols before parsing
+       */
+      function cleanAndParseNumber(val) {
+        if (typeof val === 'number') return val;
+        if (!val) return NaN;
+        
+        // Convert to string and remove non-numeric characters (except dot and minus)
+        const cleaned = String(val).replace(/[^\d.-]/g, '');
+        const num = parseFloat(cleaned);
+        
+        return isNaN(num) ? val : num;
+      }
+      
+      /**
+       * Format currency with vi-VN locale
        */
       function formatCurrency(val, suffix) {
-        const num = parseFloat(val);
-        if (isNaN(num)) return val;
-        const formatted = num.toLocaleString('en-US');
+        const num = cleanAndParseNumber(val);
+        
+        // If parsing failed, return original value
+        if (typeof num !== 'number' || isNaN(num)) {
+          return String(val);
+        }
+        
+        // Format using Vietnamese locale
+        const formatted = num.toLocaleString('vi-VN');
         return suffix ? `${formatted} ${suffix}` : `${formatted} VND`;
       }
       
@@ -808,29 +830,57 @@
       function loadData() {
         try {
           const raw = localStorage.getItem('userData');
-          if (!raw) return;
+          if (!raw) {
+            console.log("No userData found in localStorage");
+            return;
+          }
           
           let data;
           try {
             const bytes = CryptoJS.AES.decrypt(raw, ENCRYPTION_KEY);
             const decrypted = bytes.toString(CryptoJS.enc.Utf8);
             data = decrypted ? JSON.parse(decrypted) : JSON.parse(raw);
-          } catch {
-            data = JSON.parse(raw);
+          } catch (decryptErr) {
+            console.warn("Decryption failed, trying plain JSON:", decryptErr);
+            try {
+              data = JSON.parse(raw);
+            } catch (parseErr) {
+              console.error("Failed to parse userData:", parseErr);
+              return;
+            }
           }
           
+          if (!data || !data.loanAmount) {
+            console.log("No loanAmount found in userData");
+            return;
+          }
+          
+          // Parse loan amount (handle strings with commas, spaces, currency text)
+          const loan = cleanAndParseNumber(data.loanAmount);
+          
+          if (typeof loan !== 'number' || isNaN(loan) || loan <= 0) {
+            console.warn("Invalid loan amount:", data.loanAmount);
+            return;
+          }
+          
+          // Apply MAX_LOAN_AMOUNT safety bound
+          const validatedLoan = Math.min(loan, MAX_LOAN_AMOUNT);
+          if (validatedLoan !== loan) {
+            console.warn(`Loan amount ${loan} exceeds maximum, capped at ${MAX_LOAN_AMOUNT}`);
+          }
+          
+          // Calculate required amount (10% of loan)
+          const requiredAmount = Math.round(validatedLoan * 0.1);
+          
           // Update UI
-          const loan = parseFloat(data.loanAmount);
-          if (!isNaN(loan)) {
-            const loanAmountEl = document.getElementById('loanAmount');
-            const requiredAmountEl = document.getElementById('requiredAmount');
-            
-            if (loanAmountEl) {
-              loanAmountEl.textContent = formatCurrency(loan);
-            }
-            if (requiredAmountEl) {
-              requiredAmountEl.textContent = formatCurrency(loan * 0.1, 'đ');
-            }
+          const loanAmountEl = document.getElementById('loanAmount');
+          const requiredAmountEl = document.getElementById('requiredAmount');
+          
+          if (loanAmountEl) {
+            loanAmountEl.textContent = formatCurrency(validatedLoan);
+          }
+          if (requiredAmountEl) {
+            requiredAmountEl.textContent = formatCurrency(requiredAmount, 'đ');
           }
         } catch (err) {
           console.error("Error loading data:", err);
