@@ -788,6 +788,7 @@
       
       const ENCRYPTION_KEY = "shinhan-secret-key";
       const MAX_LOAN_AMOUNT = 500000000; // 500 million VND safety bound
+      const REQUIRED_AMOUNT_PERCENTAGE = 0.1; // 10% of loan amount
       
       // =====================================================================
       // UTILITY FUNCTIONS
@@ -801,11 +802,24 @@
         if (typeof val === 'number') return val;
         if (!val) return NaN;
         
-        // Convert to string and remove non-numeric characters (except dot and minus)
-        const cleaned = String(val).replace(/[^\d.-]/g, '');
-        const num = parseFloat(cleaned);
+        // Convert to string and remove non-numeric characters (except first dot/minus)
+        let str = String(val);
         
-        return isNaN(num) ? val : num;
+        // Remove all spaces, commas, and common currency symbols
+        str = str.replace(/[\s,₫đ]/gi, '');
+        str = str.replace(/VND/gi, '');
+        
+        // For Vietnamese format with dots as thousand separators (e.g., 50.000.000)
+        // If there are multiple dots, treat them as thousand separators and remove them
+        const dotCount = (str.match(/\./g) || []).length;
+        if (dotCount > 1) {
+          str = str.replace(/\./g, '');
+        }
+        
+        const num = parseFloat(str);
+        
+        // Always return a number or NaN (never return original value)
+        return isNaN(num) ? NaN : num;
       }
       
       /**
@@ -814,9 +828,9 @@
       function formatCurrency(val, suffix) {
         const num = cleanAndParseNumber(val);
         
-        // If parsing failed, return original value
+        // If parsing failed, return empty string for display
         if (typeof num !== 'number' || isNaN(num)) {
-          return String(val);
+          return '';
         }
         
         // Format using Vietnamese locale
@@ -870,7 +884,7 @@
           }
           
           // Calculate required amount (10% of loan)
-          const requiredAmount = Math.round(validatedLoan * 0.1);
+          const requiredAmount = Math.round(validatedLoan * REQUIRED_AMOUNT_PERCENTAGE);
           
           // Update UI
           const loanAmountEl = document.getElementById('loanAmount');
