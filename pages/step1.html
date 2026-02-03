@@ -204,24 +204,6 @@
                                 </div>
 
                                 <div class="form-field">
-                                    <label for="homePhone" class="form-label">Số ĐT nhà theo HK</label>
-                                    <i class="fas fa-phone form-field-icon"></i>
-                                    <input type="tel" class="form-control" id="homePhone" name="homePhone" maxlength="11" placeholder="Nhập số điện thoại">
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="landlinePhone" class="form-label">Số ĐT cố định tại nơi cư trú</label>
-                                    <i class="fas fa-phone-alt form-field-icon"></i>
-                                    <input type="tel" class="form-control" id="landlinePhone" name="landlinePhone" maxlength="11" placeholder="Nhập số điện thoại">
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="workPhone" class="form-label">Số ĐT tại nơi làm việc</label>
-                                    <i class="fas fa-briefcase form-field-icon"></i>
-                                    <input type="tel" class="form-control" id="workPhone" name="workPhone" maxlength="11" placeholder="Nhập số điện thoại">
-                                </div>
-                                
-                                <div class="form-field">
                                     <label for="email" class="form-label">Địa chỉ email *</label>
                                     <i class="fas fa-envelope form-field-icon"></i>
                                     <input type="email" class="form-control" id="email" name="email" required placeholder="email@example.com">
@@ -229,48 +211,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Thông tin Chủ Hộ khẩu -->
-                        <div class="form-section mt-4">
-                            <div class="form-section-header">
-                                <div class="form-section-icon"><i class="fas fa-home"></i></div>
-                                <div>
-                                    <h3 class="form-section-title">THÔNG TIN CHỦ HỘ KHẨU</h3>
-                                    <p class="form-section-subtitle">Nếu bạn không phải là chủ hộ khẩu</p>
-                                </div>
-                            </div>
                             
-                            <div class="form-field mb-3">
-                                <label class="form-label">Bên vay có phải là Chủ HK? *</label>
-                                <div class="d-flex gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="isHouseholdHead" id="isHouseholdHeadYes" value="yes" checked>
-                                        <label class="form-check-label" for="isHouseholdHeadYes">Có</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="isHouseholdHead" id="isHouseholdHeadNo" value="no">
-                                        <label class="form-check-label" for="isHouseholdHeadNo">Không</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="householdHeadInfo" style="display: none;">
-                                <div class="form-grid">
-                                    <div class="form-field">
-                                        <label for="householdHeadName" class="form-label">Họ và tên Chủ HK *</label>
-                                        <i class="fas fa-user form-field-icon"></i>
-                                        <input type="text" class="form-control" id="householdHeadName" name="householdHeadName" placeholder="NGUYEN VAN B" style="text-transform: uppercase;">
-                                    </div>
-                                    <div class="form-field">
-                                        <label for="householdHeadCCCD" class="form-label">SỐ CMND Chủ HK *</label>
-                                        <i class="fas fa-id-card form-field-icon"></i>
-                                        <input type="text" class="form-control" id="householdHeadCCCD" name="householdHeadCCCD" maxlength="12" placeholder="Nhập 12 số">
-                                    </div>
-                                    <div class="form-field">
-                                        <label for="householdHeadPhone" class="form-label">ĐT liên hệ Chủ HK *</label>
-                                        <i class="fas fa-phone form-field-icon"></i>
-                                        <input type="tel" class="form-control" id="householdHeadPhone" name="householdHeadPhone" maxlength="10" placeholder="09xxxxxxxx">
-                                    </div>
                                     <div class="form-field">
                                         <label for="householdHeadRelationship" class="form-label">Quan hệ với KH *</label>
                                         <i class="fas fa-users form-field-icon"></i>
@@ -460,36 +401,7 @@
                             </div>
                         </div>
 
-                        <!-- Thông tin gia đình -->
-                        <div class="form-section mt-4">
-                            <div class="form-section-header">
-                                <div class="form-section-icon"><i class="fas fa-home"></i></div>
-                                <div>
-                                    <h3 class="form-section-title">THÔNG TIN GIA ĐÌNH</h3>
-                                    <p class="form-section-subtitle">Thông tin vợ/chồng (nếu có)</p>
-                                </div>
-                            </div>
-                            
-                            <div class="form-grid">
-                                <div class="form-field">
-                                    <label for="spouseName" class="form-label">Họ tên vợ/chồng (nếu có)</label>
-                                    <i class="fas fa-user form-field-icon"></i>
-                                    <input type="text" class="form-control" id="spouseName" name="spouseName" placeholder="NGUYEN THI B" style="text-transform: uppercase;">
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="spouseCCCD" class="form-label">Số CMND của vợ/chồng (nếu có)</label>
-                                    <i class="fas fa-id-card form-field-icon"></i>
-                                    <input type="text" class="form-control" id="spouseCCCD" name="spouseCCCD" maxlength="12" placeholder="Nhập 12 số">
-                                </div>
-
-                                <div class="form-field">
-                                    <label for="spousePhone" class="form-label">Số ĐT của vợ/chồng (nếu có)</label>
-                                    <i class="fas fa-phone form-field-icon"></i>
-                                    <input type="tel" class="form-control" id="spousePhone" name="spousePhone" maxlength="10" placeholder="09xxxxxxxx">
-                                </div>
-                            </div>
-                        </div>
+                        
 
                         <!-- Cung cấp thông tin -->
                         <div class="form-section mt-4">
