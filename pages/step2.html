@@ -591,13 +591,6 @@
                 $('#accountNumber').removeClass('is-invalid');
             }
 
-            // Validate bảo hiểm dư nợ
-            if (!$('input[name="creditBalanceInsurance"]:checked').length) {
-                $('#creditBalanceInsuranceError').text('Vui lòng chọn bảo hiểm dư nợ tín dụng');
-                isValid = false;
-                if (!firstError) firstError = $('input[name="creditBalanceInsurance"]')[0];
-            }
-
             // Validate phương thức giải ngân
             const disbursementMethod = $('#disbursementMethod').val();
             if (!disbursementMethod) {
@@ -843,14 +836,6 @@
 
             // 7. Initialize interest rate
             updateInterestRate();
-
-            // 8. Toggle bảo hiểm dư nợ
-            $('input[name="creditBalanceInsurance"]').on('change', function() {
-                if ($(this).val() === 'yes') {
-                    $('#insuranceFeeGroup').slideDown();
-                } else {
-                    $('#insuranceFeeGroup').slideUp();
-                    $('#insuranceFee').val('');
                 }
             });
 
