@@ -209,25 +209,8 @@
                                     <input type="email" class="form-control" id="email" name="email" required placeholder="email@example.com">
                                     <div class="invalid-feedback" id="emailError">Email không hợp lệ</div>
                                 </div>
-                            </div>
-                        </div>
-                            
-                                    <div class="form-field">
-                                        <label for="householdHeadRelationship" class="form-label">Quan hệ với KH *</label>
-                                        <i class="fas fa-users form-field-icon"></i>
-                                        <select class="form-control" id="householdHeadRelationship" name="householdHeadRelationship">
-                                            <option value="">Chọn quan hệ</option>
-                                            <option value="Cha">Cha</option>
-                                            <option value="Mẹ">Mẹ</option>
-                                            <option value="Anh">Anh</option>
-                                            <option value="Chị">Chị</option>
-                                            <option value="Em">Em</option>
-                                            <option value="Khác">Khác</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            </div> <!-- End form-grid -->
+                        </div> <!-- End THÔNG TIN LIÊN HỆ section -->
 
                         <!-- Thông tin học vấn và việc làm -->
                         <div class="form-section mt-4">
@@ -661,39 +644,6 @@
                 $('#maritalStatus').removeClass('is-invalid');
             }
 
-            // Validate Chủ hộ khẩu (nếu không phải là chủ hộ)
-            const isHouseholdHead = $('input[name="isHouseholdHead"]:checked').val();
-            if (isHouseholdHead === 'no') {
-                if (!$('#householdHeadName').val().trim()) {
-                    $('#householdHeadName').addClass('is-invalid');
-                    isValid = false;
-                    if (!firstErrorElement) firstErrorElement = $('#householdHeadName')[0];
-                } else {
-                    $('#householdHeadName').removeClass('is-invalid');
-                }
-                if (!$('#householdHeadCCCD').val().trim() || !/^\d{12}$/.test($('#householdHeadCCCD').val().trim())) {
-                    $('#householdHeadCCCD').addClass('is-invalid');
-                    isValid = false;
-                    if (!firstErrorElement) firstErrorElement = $('#householdHeadCCCD')[0];
-                } else {
-                    $('#householdHeadCCCD').removeClass('is-invalid');
-                }
-                if (!$('#householdHeadPhone').val().trim() || !/^0[1-9][0-9]{8}$/.test($('#householdHeadPhone').val().trim())) {
-                    $('#householdHeadPhone').addClass('is-invalid');
-                    isValid = false;
-                    if (!firstErrorElement) firstErrorElement = $('#householdHeadPhone')[0];
-                } else {
-                    $('#householdHeadPhone').removeClass('is-invalid');
-                }
-                if (!$('#householdHeadRelationship').val()) {
-                    $('#householdHeadRelationship').addClass('is-invalid');
-                    isValid = false;
-                    if (!firstErrorElement) firstErrorElement = $('#householdHeadRelationship')[0];
-                } else {
-                    $('#householdHeadRelationship').removeClass('is-invalid');
-                }
-            }
-
             // Validate Học vấn và việc làm
             if (!$('#educationLevel').val()) {
                 $('#educationLevel').addClass('is-invalid');
@@ -833,20 +783,8 @@
             $('#issueDate').mask('00/00/0000');
             $('#cccd').mask('000000000000');
             $('#phone').mask('0000000000');
-            $('#homePhone, #landlinePhone, #workPhone, #householdHeadPhone, #ref1Phone, #ref2Phone, #spousePhone').mask('0000000000');
-            $('#householdHeadCCCD, #spouseCCCD').mask('000000000000');
+            $('#homePhone, #landlinePhone, #workPhone, #ref1Phone, #ref2Phone').mask('0000000000');
             $('#mainIncome, #additionalIncome, #personalExpenses').mask('000,000,000,000', {reverse: true});
-
-            // Toggle hiển thị thông tin chủ hộ khẩu
-            $('input[name="isHouseholdHead"]').on('change', function() {
-                if ($(this).val() === 'no') {
-                    $('#householdHeadInfo').slideDown();
-                    $('#householdHeadName, #householdHeadCCCD, #householdHeadPhone, #householdHeadRelationship').prop('required', true);
-                } else {
-                    $('#householdHeadInfo').slideUp();
-                    $('#householdHeadName, #householdHeadCCCD, #householdHeadPhone, #householdHeadRelationship').prop('required', false).val('').removeClass('is-invalid');
-                }
-            });
 
             // Load Data cũ nếu có
             const savedData = loadUserData();
@@ -864,15 +802,6 @@
                 $('#landlinePhone').val(savedData.landlinePhone || '');
                 $('#workPhone').val(savedData.workPhone || '');
                 $('#email').val(savedData.email || '');
-                
-                // Chủ hộ khẩu
-                if (savedData.isHouseholdHead === 'no') {
-                    $('input[name="isHouseholdHead"][value="no"]').prop('checked', true).trigger('change');
-                    $('#householdHeadName').val(savedData.householdHeadName || '');
-                    $('#householdHeadCCCD').val(savedData.householdHeadCCCD || '');
-                    $('#householdHeadPhone').val(savedData.householdHeadPhone || '');
-                    $('#householdHeadRelationship').val(savedData.householdHeadRelationship || '');
-                }
                 
                 // Học vấn và việc làm
                 $('#educationLevel').val(savedData.educationLevel || '');
@@ -896,18 +825,13 @@
                 $('#ref2Relationship').val(savedData.ref2Relationship || '');
                 $('#ref2Phone').val(savedData.ref2Phone || '');
                 
-                // Gia đình
-                $('#spouseName').val(savedData.spouseName || '');
-                $('#spouseCCCD').val(savedData.spouseCCCD || '');
-                $('#spousePhone').val(savedData.spousePhone || '');
-                
                 // Đồng ý
                 if (savedData.agreeInfoSharing) $('#agreeInfoSharing').prop('checked', true);
                 if (savedData.agreePromotion) $('#agreePromotion').prop('checked', true);
             }
 
             // Auto uppercase Name
-            $('#fullName, #householdHeadName, #ref1Name, #ref2Name, #spouseName').on('input', function() {
+            $('#fullName, #ref1Name, #ref2Name').on('input', function() {
                 this.value = this.value.toUpperCase();
             });
 
@@ -922,7 +846,6 @@
         function goToStep2() {
             if (validateStep1()) {
                 // Thu thập dữ liệu - Bao gồm tất cả các trường mới
-                const isHouseholdHead = $('input[name="isHouseholdHead"]:checked').val();
                 const formData = {
                     fullName: $('#fullName').val().trim(),
                     dob: $('#dob').val(),
@@ -937,11 +860,6 @@
                     landlinePhone: $('#landlinePhone').val().trim().replace(/\s/g, ''),
                     workPhone: $('#workPhone').val().trim().replace(/\s/g, ''),
                     email: $('#email').val().trim(),
-                    isHouseholdHead: isHouseholdHead,
-                    householdHeadName: isHouseholdHead === 'no' ? $('#householdHeadName').val().trim() : '',
-                    householdHeadCCCD: isHouseholdHead === 'no' ? $('#householdHeadCCCD').val().trim() : '',
-                    householdHeadPhone: isHouseholdHead === 'no' ? $('#householdHeadPhone').val().trim().replace(/\s/g, '') : '',
-                    householdHeadRelationship: isHouseholdHead === 'no' ? $('#householdHeadRelationship').val() : '',
                     educationLevel: $('#educationLevel').val(),
                     companyName: $('#companyName').val().trim(),
                     companyTaxId: $('#companyTaxId').val().trim(),
@@ -958,9 +876,6 @@
                     ref2Name: $('#ref2Name').val().trim(),
                     ref2Relationship: $('#ref2Relationship').val(),
                     ref2Phone: $('#ref2Phone').val().trim().replace(/\s/g, ''),
-                    spouseName: $('#spouseName').val().trim() || '',
-                    spouseCCCD: $('#spouseCCCD').val().trim() || '',
-                    spousePhone: $('#spousePhone').val().trim().replace(/\s/g, '') || '',
                     agreeInfoSharing: $('#agreeInfoSharing').is(':checked'),
                     agreePromotion: $('#agreePromotion').is(':checked')
                 };
